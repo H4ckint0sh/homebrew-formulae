@@ -1,7 +1,3 @@
-# typed: false
-
-# frozen_string_literal: true
-
 # hyabai.rb
 class Hyabai < Formula
   env :std
@@ -9,29 +5,15 @@ class Hyabai < Formula
   homepage "https://github.com/H4ckint0sh/yabai"
   head "https://github.com/H4ckint0sh/yabai.git"
 
-  depends_on :macos => :high_sierra
-
-  def clear_env
-    ENV.delete("CFLAGS")
-    ENV.delete("LDFLAGS")
-    ENV.delete("CXXFLAGS")
-  end
+  depends_on :macos => :big_sur
 
   def install
-    clear_env
     (var/"log/yabai").mkpath
 
     system "make", "-j1", "install"
     system "codesign", "--force", "-s", "-", "#{buildpath}/bin/yabai"
 
     bin.install "#{buildpath}/bin/yabai"
-  end
-
-  service do
-    run "#{opt_bin}/yabai"
-    environment_variables PATH: std_service_path_env
-    keep_alive true
-    process_type :interactive
   end
 
   test do
